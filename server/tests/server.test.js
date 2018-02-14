@@ -3,14 +3,14 @@ const request = require('supertest');
 
 const {app} = require('./../server');
 const {Todo} = require('./../models/todo');
-
+// for testing purposes, remove entries in Todo after each call
 beforeEach((done) => {
     Todo.remove({}).then(() => done());
 });
 
 describe('POST /todos', () => {
    it('should create a new todo', (done) => {
-       var text = 'Test todo test';
+       var text = 'Test todo text';
        request(app)
          .post('/todos')
          .send({text})
@@ -30,20 +30,22 @@ describe('POST /todos', () => {
             }).catch((e)  => done(e));
          });
    });
-   if ('should not create a toto wwith invalid body data', (done)  => {
-       request(app)
-         .post('/todos')
-         .send({})
-         .expect(400)
-         .end((err, res)  =>  {
-           if (err) {
-             return done(err);
-           }
-           Todo.find().then((todos) => {
-               expect(todos.length).toBe(0);
-               done();
-           }).catch((e)  => done(e));
-         });
-  });
+   // if ('should not create a todo wwith invalid body data', (done)  => {
+   //     request(app)
+   //       .post('/todos')
+   //       .send({})
+   //       .expect(400)
+   //       .end((err, res)  =>  {
+   //         if (err) {
+   //           return done(err);
+   //         }
+   //         Todo.find().then((todos) => {
+   //             expect(todos.length).toBe(0);
+   //             done();
+   //         }).catch((e)  => done(e));
+   //       });
+  //});
 
 });
+
+module.export = {app};
