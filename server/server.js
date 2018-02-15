@@ -12,6 +12,9 @@ const {ObjectID} = require('mongodb');
 
 app = express();
 const port = process.env.PORT || 3000;
+
+console.log('Port is: ', port);
+
 app.use(bodyParser.json());
 //CRUD
 //create todos
