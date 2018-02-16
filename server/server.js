@@ -44,12 +44,11 @@ app.get('/todos', (req, res) =>  {
         return res.status(404).send();
      }
      Todo.findById(id).then((todo) => {
-        if (todo) {
-          return res.send({todo});
-        }
+
         if (!todo) {
           return  res.status(404).send();
         }
+        return res.send({todo});
      }).catch((e) => {
        return res.status(400).send(e);
      });
@@ -77,11 +76,11 @@ app.delete('/todos/:id', (req, res) => {
        return res.status(404).send('Invalid ID');
     }
     Todo.findByIdAndRemove(id).then((todo) => {
-       
+
        if (!todo) {
          return  res.status(404).send();
        }
-       res.send(todo);
+       res.send({todo});
     }).catch((e) => {
       return res.status(400).send(e);
     });

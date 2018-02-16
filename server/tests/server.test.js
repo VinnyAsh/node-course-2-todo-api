@@ -6,10 +6,23 @@ const {Todo} = require('./../models/todo');
 // for testing purposes, remove entries in Todo after each call
 const {ObjectID} = require('mongodb');
 
+//*********************
+// getting errors telling me  beforeEach and describe are undefined
+//*********************
+const todos = [{
+   _id: new ObjectID(),
+   text: 'First test todo'
+ }, {
+   _id: new ObjectID(),
+   text: 'Second test todo'
 
-// beforeEach((done) => {
-//     Todo.remove({}).then(() => done());
-// });
+}];
+
+ beforeEach((done) => {
+     Todo.remove({}).then(() => {
+        return Todo.insertMany(todos);
+      }).then(() =>   done());
+ });
 
 describe('POST /todos', () => {
    it('should create a new todo', (done) => {
@@ -75,7 +88,42 @@ describe('POST /todos', () => {
          .end(done);
    });
 
+});
 
+describe('DELETE /todos/:id', () =>  {
+  it('should remove a todo', (done) -> {
+      request(app)
+         .delete(`/todos/${hexID}`)
+         .expect(200)
+          .expect(() => {
+              expect(res.body.todo._id).toBe(hexId);
+          })
+          .end(err, res) => {
+              if (err) {
+                return done(err);
+              }
+              Todo.findById(hexID) => {
+                 .expect(todo).toNotExist();
+                 done();
+              }).catch((e) => done(e));
+                return res.status(400).send(e);
+              });
+        });
+   it('should return 404 if todo not found', (done) -> {
+     var hexId = new ObjectID().toHexString();
+     request(app)
+        .delete(`/todos/${hexId}`)
+        .end(done);
+        .expect(404)
+   });
+   it('should return 404 if ObjectID is invalid', (done) -> {
+     var hexId = new ObjectID().toHexString();
+     request(app)
+        .delete('/todos/abc123')
+        .expect(404)
+        .end(done);
+
+   });
 });
 
 module.export = {app};
