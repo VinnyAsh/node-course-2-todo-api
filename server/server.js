@@ -1,8 +1,8 @@
 
-// these are library imports
-var express = require('express');
-var bodyParser = require('body-parser');
-var _ = require('lodash');
+// these are library importscons
+const express = require('express');
+const bodyParser = require('body-parser');
+const _ = require('lodash');
 
 // these are "local" import statements of mongoose
  var {mongoose} = require('./db/mongoose');
@@ -72,7 +72,6 @@ app.post('/users', (req, res) => {
 app.delete('/todos/:id', (req, res) => {
    var id = req.params.id;
     if (!ObjectID.isValid(id)) {
-      console.log('Invalid ID');
        return res.status(404).send('Invalid ID');
     }
     Todo.findByIdAndRemove(id).then((todo) => {
@@ -85,6 +84,31 @@ app.delete('/todos/:id', (req, res) => {
       return res.status(400).send(e);
     });
 });
+
+app.patch('/todos/:id', (req, res) => {
+
+  var id = req.params.id;
+  var body = _.pick(req.body, ['text', 'completed']);
+  if (!ObjectID.isValid(id)) {
+     return res.status(404).send();
+  }
+
+  if (_.isBoolean(body.completed) && body.completed) {
+      body.completed = new Date().getTime();
+    } else {
+      body.completed = false;
+      body.completedAt = null;
+    }
+    Todo.findByIdAndUpdate(id, {$set: body}, {new: true}).then((then) => {
+      if (!todo) {
+        return  res.status(404).send();
+      }
+       res.send({todo});
+    }).catch((e) => {
+      return res.status(400).send(e);
+    })
+});
+
 
 app.listen(port, () => {
    console.log(`Started on port ${port}`);

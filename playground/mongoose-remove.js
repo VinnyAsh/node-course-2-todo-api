@@ -14,3 +14,8 @@ const {User} = require('./../server/models/user');
 Todo.findByIdAndRemove('5a8710506a86be10a0dd11d2').then((todo)  => {
    console.log(todo);
 });
+
+// this allows you to delete with more criteria
+Todo.findOneAndRemove(_id:'5a8710506a86be10a0dd11d2').then((todo)  => {
+   console.log(todo);
+});
