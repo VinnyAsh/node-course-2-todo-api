@@ -1,15 +1,15 @@
 const expect = require('expect');
 const request = require('supertest');
 
-const {app} = require('./.. /server');
+const {app} = require('./../server');
 const {Todo} = require('./../models/todo');
 // for testing purposes, remove entries in Todo after each call
 const {ObjectID} = require('mongodb');
 
 
-beforeEach((done) => {
-    Todo.remove({}).then(() => done());
-});
+// beforeEach((done) => {
+//     Todo.remove({}).then(() => done());
+// });
 
 describe('POST /todos', () => {
    it('should create a new todo', (done) => {
@@ -49,7 +49,7 @@ describe('POST /todos', () => {
          });
   });
 
-   it('should return todo doc', (done) {
+   it('should return todo doc', (done) => {
       request(app)
          .get(`/todos/${todos[0]._id.toHexString()}`)
          .expect(200)
@@ -59,7 +59,7 @@ describe('POST /todos', () => {
          .end(done);
    });
 
-   it('should return 404 if todo not found', (done) {
+   it('should return 404 if todo not found', (done) => {
       var hexId = new ObjectID().toHexString();
       request(app)
          .get(`/todos/${hexId}`)
@@ -67,7 +67,7 @@ describe('POST /todos', () => {
          .end(done);
    });
 
-   it('should return 404 if bad ID', (done) {
+   it('should return 404 if bad ID', (done) => {
       var hexId = new ObjectID().toHexString();
       request(app)
          .get('/todos/abc123')
